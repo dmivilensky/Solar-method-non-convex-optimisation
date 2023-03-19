@@ -16,6 +16,18 @@ twin1 = ax.twinx()
 twin2 = ax.twinx()
 twin2.spines.right.set_position(("axes", 1.2))
 
+for item in ([ax.title, ax.xaxis.label, ax.yaxis.label] +
+             ax.get_xticklabels() + ax.get_yticklabels()):
+    item.set_fontsize(16)
+
+for item in ([twin1.title, twin1.xaxis.label, twin1.yaxis.label] +
+             twin1.get_xticklabels() + twin1.get_yticklabels()):
+    item.set_fontsize(16)
+
+for item in ([twin2.title, twin2.xaxis.label, twin2.yaxis.label] +
+             twin2.get_xticklabels() + twin2.get_yticklabels()):
+    item.set_fontsize(16)
+
 # Quadratic10 runs
 
 Bs = [1, 2, 3, 4, 5, 6, 7, 8, 9]
@@ -53,7 +65,8 @@ for B in Bs:
 
 p1 = ax.errorbar(np.array(Bs) / Quadratic.n, log, 
              yerr=[log_err_lower, log_err_upper], 
-             label=f"$n={Quadratic.n}$, $\\mu/L = {Quadratic.condition_number:.1e}$")
+             label=f"$n={Quadratic.n}$, $\\mu/L = {Quadratic.condition_number:.1e}$",
+             color="C0")
 
 
 # Quadratic25 runs
@@ -93,7 +106,8 @@ for B in Bs:
 
 p2 = twin1.errorbar(np.array(Bs) / Quadratic25.n, log, 
              yerr=[log_err_lower, log_err_upper], 
-             label=f"$n={Quadratic25.n}$, $\\mu/L = {Quadratic25.condition_number:.1e}$")
+             label=f"$n={Quadratic25.n}$, $\\mu/L = {Quadratic25.condition_number:.1e}$",
+             color="C1")
 
 
 # Quadratic50 runs
@@ -133,7 +147,8 @@ for B in Bs:
 
 p3 = twin2.errorbar(np.array(Bs) / Quadratic50.n, log, 
              yerr=[log_err_lower, log_err_upper], 
-             label=f"$n={Quadratic50.n}$, $\\mu/L = {Quadratic50.condition_number:.1e}$")
+             label=f"$n={Quadratic50.n}$, $\\mu/L = {Quadratic50.condition_number:.1e}$",
+             color="C2")
 
 
 # Plotting
@@ -156,7 +171,7 @@ twin1.tick_params(axis='y', colors=p2[0].get_color(), **tkw)
 twin2.tick_params(axis='y', colors=p3[0].get_color(), **tkw)
 ax.tick_params(axis='x', **tkw)
 
-ax.legend(handles=[p1, p2, p3])
+ax.legend(handles=[p1, p2, p3], loc="upper left")
 
 ax.grid(alpha=0.4)
 fig.tight_layout()

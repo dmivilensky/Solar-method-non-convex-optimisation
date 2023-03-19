@@ -123,6 +123,14 @@ class Rastrigin:
         n = x.shape[0]
         return 10 * n * (2 * x + 20 * np.pi * np.sin(2 * np.pi * x))
     
+    @classmethod
+    def df_stoch(cls, x):
+        n = x.shape[0]
+        g = cls.df(x)
+        indices = np.random.choice(np.arange(n), replace=False, size=int(n * 0.5))
+        g[indices] = 0
+        return g
+    
     def is_feasible(x):
         return np.all((x >= -5.12) & (x <= 5.12))
 
@@ -134,3 +142,23 @@ class Rastrigin:
     def solution(n):
         x = np.zeros(n)
         return x, 0.0
+
+class DeVilliersGlasser02:
+    n = 5
+
+    @staticmethod
+    def f(x):
+        t = lambda i: 0.1 * (i - 1)
+        y = lambda i: 53.81 * (1.27**t(i)) * np.tanh(3.012*t(i) + np.sin(2.13*t(i))) * np.cos(np.exp(0.507)*t(i))
+        return sum((x[0] * x[1]**t(i) * np.tanh(x[2]*t(i) + np.sin(x[3]*t(i))) * np.cos(t(i)*np.exp(x[4])) - y(i))**2 for i in range(1, 25))
+    
+    def is_feasible(x):
+        return np.all((x >= 1) & (x <= 60))
+
+    @staticmethod
+    def initial_point():
+        return np.ones(5) * 30
+    
+    @staticmethod
+    def solution():
+        return np.array([53.81, 1.27, 3.012, 2.13, 0.507]), 0.0

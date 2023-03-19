@@ -34,10 +34,14 @@ class MonotonicSequenceBasinHopping(OptimisationMethod):
         for _ in range(iterations):
             s = self.jump_length * generate_spherically_symmetric(n)
             
-            y, _, fy_ = self.subsolver.optimise(
-                f, df, x + s, self.subsolver_iterations, 
-                is_feasible=lambda y: np.all((y >= self.bounds[0]) & (y <= self.bounds[1])))
-            fy = fy_[-1]
+            y = np.clip(x + s, self.bounds[0], self.bounds[1])
+            if self.subsolver is not None:
+                y, _, fy_ = self.subsolver.optimise(
+                    f, df, y, self.subsolver_iterations, 
+                    is_feasible=lambda y: np.all((y >= self.bounds[0]) & (y <= self.bounds[1])))
+                fy = fy_[-1]
+            else:
+                fy = f(y)
 
             if fy < function_log[-1]:
                 x = np.copy(y)
